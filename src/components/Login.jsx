@@ -46,13 +46,13 @@ const Login = ({ onLogin }) => {
           <Col md={6} lg={5}>
             <div className="glass-card p-5 mt-5">
               <div className="text-center mb-4">
-                <h2 className="fw-bold text-white">Bentornato</h2>
-                <p className="text-white-50">Accedi al tuo account</p>
+                <h2 className="fw-bold text-black">Bentornato</h2>
+                <p className="text-black-50">Accedi al tuo account</p>
               </div>
 
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label className="text-white">Email</Form.Label>
+                  <Form.Label className="text-black">Email</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -64,7 +64,7 @@ const Login = ({ onLogin }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <Form.Label className="text-white">Password</Form.Label>
+                  <Form.Label className="text-black">Password</Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -84,9 +84,9 @@ const Login = ({ onLogin }) => {
                 </Button>
 
                 <div className="text-center mt-3">
-                  <small className="text-white-50">
+                  <small className="text-black-50">
                     Non hai un account?{" "}
-                    <Link to="/register" className="text-warning fw-bold">
+                    <Link to="/auth/register" className="text-warning fw-bold">
                       Registrati
                     </Link>
                   </small>
