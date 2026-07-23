@@ -5,8 +5,8 @@ import Header from "./components/Header";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
-import FattureList from "./components/FattureList";
-import ClientiList from "./components/ClientiList";
+// import FattureList from "./components/FattureList"
+// import ClientiList from "./components/ClientiList"
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -103,7 +103,7 @@ function App() {
           }
         />
         {/*ROTTA PER ADMIN*/}
-        <Route
+        {/* <Route
           path="/home"
           element={
             <ProtectedRoute>
@@ -115,7 +115,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/auth/login" replace />} />
+        <Route path="*" element={<Navigate to="/auth/login" replace />} /> */}
       </Routes>
     </div>
   );

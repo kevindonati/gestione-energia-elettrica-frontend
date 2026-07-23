@@ -10,6 +10,8 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
+import ClientiList from "./ClientiList";
+import FattureList from "./FattureList";
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
@@ -45,6 +47,7 @@ const Home = () => {
             surname: data.surname,
             username: data.username,
             email: data.email,
+            ruoli: data.ruoli,
           });
           setLoading(false);
         }, 1000);
@@ -60,6 +63,16 @@ const Home = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/auth/login");
+  };
+
+  const isAdmin = () => {
+    console.log("Controllo se utente è admin");
+    if (!userData) {
+      console.log("Userdata non trovato");
+      return false;
+    }
+    console.log("Utente è admin");
+    return userData.ruoli.includes("ADMIN");
   };
 
   if (loading) {
@@ -129,6 +142,17 @@ const Home = () => {
             </Card>
           </Col>
         </Row>
+        {isAdmin() && (
+          <div className="admin-section mt-5 pt-3">
+            <hr className="my-5" />
+            <h3 className="mb-4 text-center fw-bold text-black">
+              Gestione Clienti e Fatture
+            </h3>
+            <ClientiList />
+            <hr className="my-5" />
+            <FattureList />
+          </div>
+        )}
       </Container>
     </div>
   );
