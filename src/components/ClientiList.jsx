@@ -1,0 +1,167 @@
+import { useState, useEffect, useCallback } from "react";
+import { fetchWithAuth } from "../services/api";
+
+export default function ClientiList() {
+  const [clienti, setClienti] = useState([]);
+
+  // Stati per Filtri
+  const [nome, setNome] = useState("");
+  const [fatturatoMin, setFatturatoMin] = useState("");
+  const [dataInserimento, setDataInserimento] = useState("");
+  const [dataUltimoContatto, setDataUltimoContatto] = useState("");
+
+  // Stati per Ordinamento
+  const [sortBy, setSortBy] = useState("ragioneSociale");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  // Funzione per caricare i dati dal Backend
+  const loadClienti = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({
+        sortBy: sortBy,
+        order: sortOrder,
+      });
+
+      if (nome) params.append("nome", nome);
+      if (fatturatoMin) params.append("fatturato", fatturatoMin);
+      if (dataInserimento) params.append("dataInserimento", dataInserimento);
+      if (dataUltimoContatto)
+        params.append("dataUltimoContatto", dataUltimoContatto);
+
+      const data = await fetchWithAuth(`/clienti?${params.toString()}`);
+      setClienti(data.content || data);
+    } catch (err) {
+      console.error("Errore caricamento clienti:", err.message);
+    }
+  }, [sortBy, sortOrder]); // Chiamata automatica SOLO al cambio ordinamento
+
+  // Effetto al primo caricamento o cambio d'ordine
+  useEffect(() => {
+    loadClienti();
+  }, [loadClienti]);
+
+  return (
+    <div className="card p-3 mb-4 shadow-sm">
+      <h3 className="mb-3">Gestione Clienti</h3>
+
+      {/* --- SEZIONE FILTRI --- */}
+      <div className="row g-2 mb-3">
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Cerca Nome</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Parte del nome..."
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+        </div>
+
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Fatturato Minimo</label>
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Es. 50000"
+            value={fatturatoMin}
+            onChange={(e) => setFatturatoMin(e.target.value)}
+          />
+        </div>
+
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Data Inserimento</label>
+          <input
+            type="date"
+            className="form-control"
+            value={dataInserimento}
+            onChange={(e) => setDataInserimento(e.target.value)}
+          />
+        </div>
+
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Data Ultimo Contatto</label>
+          <input
+            type="date"
+            className="form-control"
+            value={dataUltimoContatto}
+            onChange={(e) => setDataUltimoContatto(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* --- SEZIONE ORDINAMENTO E PULSANTE --- */}
+      <div className="row g-2 mb-4 align-items-end">
+        <div className="col-md-5">
+          <label className="form-label fw-bold">Ordina Per</label>
+          <select
+            className="form-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="ragioneSociale">Nome / Ragione Sociale</option>
+            <option value="fatturatoAnnuale">Fatturato Annuale</option>
+            <option value="dataInserimento">Data Inserimento</option>
+            <option value="dataUltimoContatto">Data Ultimo Contatto</option>
+            <option value="indirizzoSedeLegale.comune.provincia">
+              Provincia Sede Legale
+            </option>
+          </select>
+        </div>
+
+        <div className="col-md-4">
+          <label className="form-label fw-bold">Direzione</label>
+          <select
+            className="form-select"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="asc">Crescente (ASC)</option>
+            <option value="desc">Decrescente (DESC)</option>
+          </select>
+        </div>
+
+        <div className="col-md-3">
+          <button className="btn btn-primary w-100" onClick={loadClienti}>
+            Applica Filtri
+          </button>
+        </div>
+      </div>
+
+      {/* --- TABELLA CLIENTI --- */}
+      <div className="table-responsive">
+        <table className="table table-striped table-hover align-middle">
+          <thead className="table-dark">
+            <tr>
+              <th>Nome</th>
+              <th>Fatturato</th>
+              <th>Data Ins.</th>
+              <th>Ultimo Contatto</th>
+              <th>Provincia</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clienti.length > 0 ? (
+              clienti.map((c) => (
+                <tr key={c.id}>
+                  <td>{c.ragioneSociale || c.nome}</td>
+                  <td>€ {c.fatturatoAnnuale}</td>
+                  <td>{c.dataInserimento}</td>
+                  <td>{c.dataUltimoContatto}</td>
+                  <td>
+                    {c.indirizzoSedeLegale?.comune?.provincia?.sigla || "N/D"}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-3">
+                  Nessun cliente trovato
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
