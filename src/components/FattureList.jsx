@@ -4,14 +4,24 @@ import { fetchWithAuth } from "../services/api";
 export default function FattureList() {
   const [fatture, setFatture] = useState([]);
 
+  // Stati per Filtri
   const [anno, setAnno] = useState("");
   const [data, setData] = useState("");
   const [minImporto, setMinImporto] = useState("");
   const [maxImporto, setMaxImporto] = useState("");
 
-  const loadFatture = async () => {
+  // Stati per Ordinamento
+  const [sortBy, setSortBy] = useState("id");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  // Funzione isolata per quando clicchi "Applica Filtri"
+  const handleFilterClick = async () => {
     try {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams({
+        sortBy: sortBy,
+        order: sortOrder,
+      });
+
       if (anno) params.append("anno", anno);
       if (data) params.append("data", data);
       if (minImporto) params.append("minImporto", minImporto);
@@ -24,17 +34,46 @@ export default function FattureList() {
     }
   };
 
+  // Caricamento automatico iniziale e al cambio di ordinamento
   useEffect(() => {
-    loadFatture();
-  }, []);
+    let isMounted = true;
+
+    const getInitialData = async () => {
+      try {
+        const params = new URLSearchParams({
+          sortBy: sortBy,
+          order: sortOrder,
+        });
+
+        if (anno) params.append("anno", anno);
+        if (data) params.append("data", data);
+        if (minImporto) params.append("minImporto", minImporto);
+        if (maxImporto) params.append("maxImporto", maxImporto);
+
+        const res = await fetchWithAuth(`/fatture?${params.toString()}`);
+        if (isMounted) {
+          setFatture(res.content || res);
+        }
+      } catch (err) {
+        console.error("Errore caricamento fatture:", err.message);
+      }
+    };
+
+    getInitialData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [sortBy, sortOrder]);
 
   return (
-    <div className="card p-3 shadow-sm">
-      <h3>Filtro Fatture</h3>
+    <div className="card p-3 mb-4 shadow-sm">
+      <h3 className="mb-3">Gestione Fatture</h3>
 
-      <div className="row g-2 mb-3 align-items-end">
-        <div className="col-md-2">
-          <label className="form-label">Anno</label>
+      {/* --- SEZIONE FILTRI --- */}
+      <div className="row g-2 mb-3">
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Anno</label>
           <input
             type="number"
             className="form-control"
@@ -45,7 +84,7 @@ export default function FattureList() {
         </div>
 
         <div className="col-md-3">
-          <label className="form-label">Data Precisa</label>
+          <label className="form-label fw-bold">Data Precisa</label>
           <input
             type="date"
             className="form-control"
@@ -54,55 +93,97 @@ export default function FattureList() {
           />
         </div>
 
-        <div className="col-md-2">
-          <label className="form-label">Importo Min</label>
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Importo Minimo</label>
           <input
             type="number"
             className="form-control"
+            placeholder="Es. 100"
             value={minImporto}
             onChange={(e) => setMinImporto(e.target.value)}
           />
         </div>
 
-        <div className="col-md-2">
-          <label className="form-label">Importo Max</label>
+        <div className="col-md-3">
+          <label className="form-label fw-bold">Importo Massimo</label>
           <input
             type="number"
             className="form-control"
+            placeholder="Es. 5000"
             value={maxImporto}
             onChange={(e) => setMaxImporto(e.target.value)}
           />
         </div>
+      </div>
+
+      {/* --- SEZIONE ORDINAMENTO E PULSANTE --- */}
+      <div className="row g-2 mb-4 align-items-end">
+        <div className="col-md-5">
+          <label className="form-label fw-bold">Ordina Per</label>
+          <select
+            className="form-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="id">ID Fattura</option>
+            <option value="data">Data</option>
+            <option value="importo">Importo</option>
+            <option value="anno">Anno</option>
+          </select>
+        </div>
+
+        <div className="col-md-4">
+          <label className="form-label fw-bold">Direzione</label>
+          <select
+            className="form-select"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="asc">Crescente (ASC)</option>
+            <option value="desc">Decrescente (DESC)</option>
+          </select>
+        </div>
 
         <div className="col-md-3">
-          <button className="btn btn-success w-100" onClick={loadFatture}>
-            Filtra Fatture
+          <button className="btn btn-primary w-100" onClick={handleFilterClick}>
+            Applica Filtri
           </button>
         </div>
       </div>
 
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Data</th>
-            <th>Importo</th>
-            <th>Stato</th>
-            <th>Cliente</th>
-          </tr>
-        </thead>
-        <tbody>
-          {fatture.map((f) => (
-            <tr key={f.id}>
-              <td>{f.id}</td>
-              <td>{f.data}</td>
-              <td>€ {f.importo}</td>
-              <td>{f.statoFattura?.nome || f.stato}</td>
-              <td>{f.cliente?.ragioneSociale || f.clienteId}</td>
+      {/* --- TABELLA FATTURE --- */}
+      <div className="table-responsive">
+        <table className="table table-striped table-hover align-middle">
+          <thead className="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Data</th>
+              <th>Importo</th>
+              <th>Stato</th>
+              <th>Cliente</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {fatture && fatture.length > 0 ? (
+              fatture.map((f) => (
+                <tr key={f.id}>
+                  <td>{f.id}</td>
+                  <td>{f.data}</td>
+                  <td>€ {f.importo}</td>
+                  <td>{f.statoFattura?.nome || f.stato || "N/D"}</td>
+                  <td>{f.cliente?.ragioneSociale || f.clienteId || "N/D"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-3">
+                  Nessuna fattura trovata
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

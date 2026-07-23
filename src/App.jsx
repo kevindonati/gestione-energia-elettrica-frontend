@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
+import FattureList from "./components/FattureList";
+import ClientiList from "./components/ClientiList";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -93,6 +95,18 @@ function App() {
             <ProtectedRoute>
               <Header />
               <main className="container mt-4">
+                <Home />
+              </main>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <main className="container mt-4">
+                <FattureList />
+                <ClientiList />
                 <Home />
               </main>
             </ProtectedRoute>

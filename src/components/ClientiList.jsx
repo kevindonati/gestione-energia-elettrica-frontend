@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { fetchWithAuth } from "../services/api";
 
 export default function ClientiList() {
@@ -14,8 +14,8 @@ export default function ClientiList() {
   const [sortBy, setSortBy] = useState("ragioneSociale");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  // Funzione per caricare i dati dal Backend
-  const loadClienti = useCallback(async () => {
+  // Funzione isolata per quando clicchi "Applica Filtri"
+  const handleFilterClick = async () => {
     try {
       const params = new URLSearchParams({
         sortBy: sortBy,
@@ -33,12 +33,40 @@ export default function ClientiList() {
     } catch (err) {
       console.error("Errore caricamento clienti:", err.message);
     }
-  }, [sortBy, sortOrder]); // Chiamata automatica SOLO al cambio ordinamento
+  };
 
-  // Effetto al primo caricamento o cambio d'ordine
+  // Caricamento automatico iniziale e al cambio di ordinamento
   useEffect(() => {
-    loadClienti();
-  }, [loadClienti]);
+    let isMounted = true;
+
+    const getInitialData = async () => {
+      try {
+        const params = new URLSearchParams({
+          sortBy: sortBy,
+          order: sortOrder,
+        });
+
+        if (nome) params.append("nome", nome);
+        if (fatturatoMin) params.append("fatturato", fatturatoMin);
+        if (dataInserimento) params.append("dataInserimento", dataInserimento);
+        if (dataUltimoContatto)
+          params.append("dataUltimoContatto", dataUltimoContatto);
+
+        const data = await fetchWithAuth(`/clienti?${params.toString()}`);
+        if (isMounted) {
+          setClienti(data.content || data);
+        }
+      } catch (err) {
+        console.error("Errore caricamento clienti:", err.message);
+      }
+    };
+
+    getInitialData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [sortBy, sortOrder]);
 
   return (
     <div className="card p-3 mb-4 shadow-sm">
@@ -121,7 +149,7 @@ export default function ClientiList() {
         </div>
 
         <div className="col-md-3">
-          <button className="btn btn-primary w-100" onClick={loadClienti}>
+          <button className="btn btn-primary w-100" onClick={handleFilterClick}>
             Applica Filtri
           </button>
         </div>
@@ -140,9 +168,9 @@ export default function ClientiList() {
             </tr>
           </thead>
           <tbody>
-            {clienti.length > 0 ? (
+            {clienti && clienti.length > 0 ? (
               clienti.map((c) => (
-                <tr key={c.id}>
+                <tr key={c.id || c.ragioneSociale}>
                   <td>{c.ragioneSociale || c.nome}</td>
                   <td>€ {c.fatturatoAnnuale}</td>
                   <td>{c.dataInserimento}</td>
