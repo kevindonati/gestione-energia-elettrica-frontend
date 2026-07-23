@@ -49,15 +49,15 @@ const Register = ({ onRegister }) => {
           <Col md={6} lg={5}>
             <div className="glass-card p-5 my-5">
               <div className="text-center mb-4">
-                <h2 className="fw-bold text-white">Crea Account</h2>
-                <p className="text-white-50">
+                <h2 className="fw-bold text-black">Crea Account</h2>
+                <p className="text-black-50">
                   Inserisci i tuoi dati per registrarti
                 </p>
               </div>
 
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label className="text-white">Nome</Form.Label>
+                  <Form.Label className="text-black">Nome</Form.Label>
                   <Form.Control
                     type="text"
                     name="name"
@@ -69,7 +69,7 @@ const Register = ({ onRegister }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="text-white">Cognome</Form.Label>
+                  <Form.Label className="text-black">Cognome</Form.Label>
                   <Form.Control
                     type="text"
                     name="surname"
@@ -81,7 +81,7 @@ const Register = ({ onRegister }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="text-white">Username</Form.Label>
+                  <Form.Label className="text-black">Username</Form.Label>
                   <Form.Control
                     type="text"
                     name="username"
@@ -93,7 +93,7 @@ const Register = ({ onRegister }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="text-white">Email</Form.Label>
+                  <Form.Label className="text-black">Email</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -105,7 +105,7 @@ const Register = ({ onRegister }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-4">
-                  <Form.Label className="text-white">Password</Form.Label>
+                  <Form.Label className="text-black">Password</Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -125,7 +125,7 @@ const Register = ({ onRegister }) => {
                 </Button>
 
                 <div className="text-center mt-3">
-                  <small className="text-white-50">
+                  <small className="text-black-50">
                     Hai già un account?{" "}
                     <Link to="/login" className="text-warning fw-bold">
                       Accedi qui
