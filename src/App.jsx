@@ -1,22 +1,22 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/Header";
-import Register from "./components/Register";
-import Login from "./components/Login";
+import "./App.css"
+import "bootstrap/dist/css/bootstrap.min.css"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import Header from "./components/Header"
+import Register from "./components/Register"
+import Login from "./components/Login"
 
 function App() {
   // Esempio di gestione chiamata API per il Login
   const handleLogin = async (credentials) => {
-    console.log("Dati Login inviati:", credentials);
+    console.log("Dati Login inviati:", credentials)
     // Qui inserirai la fetch/axios verso il tuo backend (es. POST /auth/login)
-  };
+  }
 
   // Esempio di gestione chiamata API per la Registrazione
   const handleRegister = async (formData) => {
-    console.log("Dati Registrazione inviati:", formData);
+    console.log("Dati Registrazione inviati:", formData)
     // Qui inserirai la fetch/axios verso il tuo backend (es. POST /auth/register)
-  };
+  }
 
   return (
     <BrowserRouter>
@@ -47,7 +47,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App
