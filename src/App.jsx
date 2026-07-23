@@ -89,6 +89,7 @@ function App() {
         />
 
         {/* Rotta Protetta */}
+        {/*ROTTA PER CLIENTE*/}
         <Route
           path="/home"
           element={
@@ -96,10 +97,12 @@ function App() {
               <Header />
               <main className="container mt-4">
                 <Home />
+                {/*COMPONENTE PER LE FATTURE DEL CLIENTE*/}
               </main>
             </ProtectedRoute>
           }
         />
+        {/*ROTTA PER ADMIN*/}
         <Route
           path="/home"
           element={
