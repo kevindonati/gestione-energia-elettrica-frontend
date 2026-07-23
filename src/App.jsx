@@ -6,8 +6,17 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
 
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return <Navigate to="/auth/login" replace />;
+  }
+  return children;
+};
+
 function App() {
   const navigate = useNavigate();
+
   const handleLogin = async (credentials) => {
     try {
       const response = await fetch("http://localhost:3001/auth/login", {
@@ -30,6 +39,7 @@ function App() {
       }
 
       console.log("Login effettuato con successo:", data);
+      navigate("/home");
       return true;
     } catch (error) {
       console.error("Errore durante il login:", error.message);
@@ -71,24 +81,23 @@ function App() {
         <Route path="/" element={<Navigate to="/auth/login" replace />} />
 
         <Route path="/auth/login" element={<Login onLogin={handleLogin} />} />
-
         <Route
           path="/auth/register"
           element={<Register onRegister={handleRegister} />}
         />
 
+        {/* Rotta Protetta */}
         <Route
           path="/home"
           element={
-            <>
+            <ProtectedRoute>
               <Header />
               <main className="container mt-4">
                 <Home />
               </main>
-            </>
+            </ProtectedRoute>
           }
         />
-
         <Route path="*" element={<Navigate to="/auth/login" replace />} />
       </Routes>
     </div>
