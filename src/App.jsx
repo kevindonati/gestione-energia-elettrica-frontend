@@ -1,19 +1,19 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
 
 function App() {
+  const navigate = useNavigate();
   const handleLogin = async (credentials) => {
     try {
       const response = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
         },
         body: JSON.stringify(credentials),
       });
@@ -24,9 +24,9 @@ function App() {
       }
 
       const data = await response.json();
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
+      console.log(data);
+      if (data) {
+        localStorage.setItem("token", data.accessToken);
       }
 
       console.log("Login effettuato con successo:", data);
@@ -56,6 +56,7 @@ function App() {
       const data = await response.json();
       console.log("Registrazione completata:", data);
       alert("Registrazione avvenuta con successo! Ora puoi accedere.");
+      navigate("/auth/login");
       return true;
     } catch (error) {
       console.error("Errore durante la registrazione:", error.message);
@@ -65,34 +66,32 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+    <div className="app-container">
+      <Routes>
+        <Route path="/" element={<Navigate to="/auth/login" replace />} />
 
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/auth/login" element={<Login onLogin={handleLogin} />} />
 
-          <Route
-            path="/register"
-            element={<Register onRegister={handleRegister} />}
-          />
+        <Route
+          path="/auth/register"
+          element={<Register onRegister={handleRegister} />}
+        />
 
-          <Route
-            path="/home"
-            element={
-              <>
-                <Header />
-                <main className="container mt-4">
-                  <Home />
-                </main>
-              </>
-            }
-          />
+        <Route
+          path="/home"
+          element={
+            <>
+              <Header />
+              <main className="container mt-4">
+                <Home />
+              </main>
+            </>
+          }
+        />
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+        <Route path="*" element={<Navigate to="/auth/login" replace />} />
+      </Routes>
+    </div>
   );
 }
 

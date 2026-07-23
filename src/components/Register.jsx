@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
 
@@ -12,8 +12,6 @@ const Register = ({ onRegister }) => {
     name: "",
     surname: "",
   });
-
-  const navigate = useNavigate();
 
   const registrationStyle = {
     backgroundSize: "cover",
@@ -35,11 +33,7 @@ const Register = ({ onRegister }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (onRegister) {
-      onRegister(formData);
-    }
-
-    navigate("/login");
+    onRegister(formData);
   };
 
   return (

@@ -84,9 +84,9 @@ const Login = ({ onLogin }) => {
                 </Button>
 
                 <div className="text-center mt-3">
-                  <small className="text-white-50">
+                  <small className="text-black-50">
                     Non hai un account?{" "}
-                    <Link to="/register" className="text-warning fw-bold">
+                    <Link to="/auth/register" className="text-warning fw-bold">
                       Registrati
                     </Link>
                   </small>

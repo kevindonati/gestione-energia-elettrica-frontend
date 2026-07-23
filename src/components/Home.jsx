@@ -24,7 +24,7 @@ const Home = () => {
 
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:3001/auth/login", {
+        const response = await fetch("http://localhost:3001/utenti/me", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -37,12 +37,14 @@ const Home = () => {
         const data = await response.json();
         setUserData(data);
 
+        console.log(data);
+
         setTimeout(() => {
           setUserData({
-            name: "Mario",
-            surname: "Rossi",
-            username: "mario_rossi",
-            email: "mario.rossi@example.com",
+            name: data.name,
+            surname: data.surname,
+            username: data.username,
+            email: data.email,
           });
           setLoading(false);
         }, 1000);
@@ -57,7 +59,7 @@ const Home = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/auth/login");
   };
 
   if (loading) {
