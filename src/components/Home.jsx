@@ -112,14 +112,14 @@ const Home = () => {
                 <Row className="text-center my-4">
                   <Col>
                     <div className="p-3 bg-black bg-opacity-10 rounded">
-                      <h3 className="text-warning fw-bold">2.4 kW</h3>
-                      <p className="text-white-50 mb-0">Consumo Attuale</p>
+                      <h3 className="text-black fw-bold">2.4 kW</h3>
+                      <p className="text-black-50 mb-0">Consumo Attuale</p>
                     </div>
                   </Col>
                   <Col>
                     <div className="p-3 bg-black bg-opacity-10 rounded">
-                      <h3 className="text-success fw-bold">Attivo</h3>
-                      <p className="text-white-50 mb-0">Stato Contatore</p>
+                      <h3 className="text-black fw-bold">Attivo</h3>
+                      <p className="text-black-50 mb-0">Stato Contatore</p>
                     </div>
                   </Col>
                 </Row>
