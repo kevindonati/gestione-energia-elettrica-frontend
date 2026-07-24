@@ -14,6 +14,8 @@ import UpdateFattura from "./components/UpdateFattura";
 import CreateStatoFattura from "./components/CreateStatoFattura";
 import UpdateStatoFattura from "./components/UpdateStatoFattura";
 import ClientiCreate from "./components/ClientiCreate";
+import ClientiEdit from "./components/ClientiEdit";
+import ClientiAvatarUpload from "./components/ClientiAvatarUpload";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -164,6 +166,16 @@ function App() {
                 <ProtectedRoute>
                   <Header />
                   <ClientiCreate />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/modifica-cliente/:id"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <ClientiEdit />
+                  <ClientiAvatarUpload />
                 </ProtectedRoute>
               }
             ></Route>
