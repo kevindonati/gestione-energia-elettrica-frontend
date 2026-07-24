@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { fetchWithAuth } from "../services/api";
+import { useEffect, useState } from "react"
+import { fetchWithAuth } from "../services/api"
+import { Link } from "react-router-dom"
 
 function CreateFattura() {
-  const [clienti, setClienti] = useState([]);
-  const [statiFattura, setStatiFattura] = useState([]);
+  const [clienti, setClienti] = useState([])
+  const [statiFattura, setStatiFattura] = useState([])
 
   const [formData, setFormData] = useState({
     numero: "",
@@ -11,51 +12,51 @@ function CreateFattura() {
     importo: "",
     clienteId: "",
     statoFatturaId: "",
-  });
+  })
 
-  const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [loadingData, setLoadingData] = useState(true)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoadingData(true);
-        setError("");
+        setLoadingData(true)
+        setError("")
 
         const [clientiData, statiData] = await Promise.all([
           fetchWithAuth("/clienti"),
           fetchWithAuth("/stati-fattura"),
-        ]);
+        ])
 
-        setClienti(clientiData.content ?? clientiData);
-        setStatiFattura(statiData.content ?? statiData);
+        setClienti(clientiData.content ?? clientiData)
+        setStatiFattura(statiData.content ?? statiData)
       } catch (err) {
-        setError(err.message);
+        setError(err.message)
       } finally {
-        setLoadingData(false);
+        setLoadingData(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
 
     setFormData((previousData) => ({
       ...previousData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    setLoading(true);
-    setError("");
-    setSuccess("");
+    setLoading(true)
+    setError("")
+    setSuccess("")
 
     try {
       const data = await fetchWithAuth("/fatture", {
@@ -67,9 +68,9 @@ function CreateFattura() {
           clienteId: formData.clienteId,
           statoFatturaId: formData.statoFatturaId,
         }),
-      });
+      })
 
-      setSuccess(`Fattura creata con successo! ID: ${data?.id ?? ""}`);
+      setSuccess(`Fattura creata con successo! ID: ${data?.id ?? ""}`)
 
       setFormData({
         numero: "",
@@ -77,13 +78,13 @@ function CreateFattura() {
         importo: "",
         clienteId: "",
         statoFatturaId: "",
-      });
+      })
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loadingData) {
     return (
@@ -94,7 +95,7 @@ function CreateFattura() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -202,9 +203,16 @@ function CreateFattura() {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="statoFatturaId" className="form-label">
+                  <label htmlFor="statoFatturaId" className="form-label m-0">
                     Stato fattura
                   </label>
+
+                  <Link
+                    className="small text-primary m-0 d-block"
+                    to="/modifica-stato-fattura"
+                  >
+                    Modifica stato fattura
+                  </Link>
 
                   <select
                     className="form-select"
@@ -250,7 +258,7 @@ function CreateFattura() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default CreateFattura;
+export default CreateFattura
