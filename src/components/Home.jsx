@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import "../App.css";
 import ClientiList from "./ClientiList";
 import FattureList from "./FattureList";
+import CreateFattura from "./CreateFattura";
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
@@ -148,11 +149,13 @@ const Home = () => {
             <h3 className="mb-4 text-center fw-bold text-black">
               Gestione Clienti e Fatture
             </h3>
-            <ClientiList />
+            <CreateFattura />
             <hr className="my-5" />
-            <FattureList />
+            <ClientiList />
           </div>
         )}
+        <hr className="my-5" />
+        <FattureList />
       </Container>
     </div>
   );
