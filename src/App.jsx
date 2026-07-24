@@ -70,12 +70,12 @@ function App() {
       console.log("Userdata non trovato");
       return false;
     }
-    if (userData.ruoli[0].nomeRuolo.includes("ADMIN")) {
+    if (userData.ruoli.includes("ADMIN")) {
       console.log("Utente è admin");
     } else {
       console.log("Utente non è admin");
     }
-    return userData.ruoli[0].nomeRuolo.includes("ADMIN");
+    return userData.ruoli.includes("ADMIN");
   };
 
   const handleRegister = async (formData) => {
