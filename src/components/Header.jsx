@@ -1,4 +1,5 @@
 import { Container, Nav, Navbar, NavDropdown, Image } from "react-bootstrap"
+import { Link } from "react-router-dom"
 
 const Header = function () {
   return (
@@ -10,7 +11,24 @@ const Header = function () {
           <Nav className="w-100 d-flex justify-content-between align-items-center">
             <div className="d-flex">
               <Nav.Link href="#">Home</Nav.Link>
-              <Nav.Link href="#">Link</Nav.Link>
+
+              <NavDropdown title="Clienti" id="basic-nav-dropdown2">
+                <NavDropdown.Item as={Link} to="/lista-clienti">
+                  Gestione clienti
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/crea-cliente">
+                  Crea cliente
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              <NavDropdown title="Fatture" id="basic-nav-dropdown3">
+                <NavDropdown.Item as={Link} to="/lista-fatture">
+                  Gestione fatture
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/crea-fattura">
+                  Crea fattura
+                </NavDropdown.Item>
+              </NavDropdown>
             </div>
 
             <div className="d-flex">

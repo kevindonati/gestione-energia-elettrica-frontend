@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import {
   Container,
   Row,
@@ -7,40 +7,40 @@ import {
   Spinner,
   Alert,
   Button,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "../App.css";
-import ClientiList from "./ClientiList";
-import FattureList from "./FattureList";
-import CreateFattura from "./CreateFattura";
+} from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+import "../App.css"
+// import ClientiList from "./ClientiList"
+// import FattureList from "./FattureList"
+// import CreateFattura from "./CreateFattura"
 
 const Home = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        setLoading(true);
+        setLoading(true)
 
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token")
 
         const response = await fetch("http://localhost:3001/utenti/me", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error("Impossibile recuperare i dati utente");
+          throw new Error("Impossibile recuperare i dati utente")
         }
-        const data = await response.json();
-        setUserData(data);
+        const data = await response.json()
+        setUserData(data)
 
-        console.log(data);
+        console.log(data)
 
         setTimeout(() => {
           setUserData({
@@ -49,39 +49,39 @@ const Home = () => {
             username: data.username,
             email: data.email,
             ruoli: data.ruoli,
-          });
-          setLoading(false);
-        }, 1000);
+          })
+          setLoading(false)
+        }, 1000)
       } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        setError(err.message)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchUserProfile();
-  }, []);
+    fetchUserProfile()
+  }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/auth/login");
-  };
+    localStorage.removeItem("token")
+    navigate("/auth/login")
+  }
 
-  const isAdmin = () => {
-    console.log("Controllo se utente è admin");
-    if (!userData) {
-      console.log("Userdata non trovato");
-      return false;
-    }
-    console.log("Utente è admin");
-    return userData.ruoli.includes("ADMIN");
-  };
+  // const isAdmin = () => {
+  //   console.log("Controllo se utente è admin")
+  //   if (!userData) {
+  //     console.log("Userdata non trovato")
+  //     return false
+  //   }
+  //   console.log("Utente è admin")
+  //   return userData.ruoli.includes("ADMIN")
+  // }
 
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
         <Spinner animation="border" variant="warning" />
       </div>
-    );
+    )
   }
 
   return (
@@ -143,7 +143,7 @@ const Home = () => {
             </Card>
           </Col>
         </Row>
-        {isAdmin() && (
+        {/* {isAdmin() && (
           <div className="admin-section mt-5 pt-3">
             <hr className="my-5" />
             <h3 className="mb-4 text-center fw-bold text-black">
@@ -153,12 +153,12 @@ const Home = () => {
             <hr className="my-5" />
             <ClientiList />
           </div>
-        )}
-        <hr className="my-5" />
-        <FattureList />
+        )} */}
+        {/* <hr className="my-5" />
+        <FattureList /> */}
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

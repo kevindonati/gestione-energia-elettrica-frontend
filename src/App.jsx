@@ -1,23 +1,25 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Header from "./components/Header";
-import Register from "./components/Register";
-import Login from "./components/Login";
-import Home from "./components/Home";
-// import FattureList from "./components/FattureList"
-// import ClientiList from "./components/ClientiList"
+import "./App.css"
+import "bootstrap/dist/css/bootstrap.min.css"
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
+import Header from "./components/Header"
+import Register from "./components/Register"
+import Login from "./components/Login"
+import Home from "./components/Home"
+import FattureList from "./components/FattureList"
+import ClientiList from "./components/ClientiList"
+import CreateFattura from "./components/CreateFattura"
+import NotFound from "./components/NotFound"
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token")
   if (!token) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/auth/login" replace />
   }
-  return children;
-};
+  return children
+}
 
 function App() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleLogin = async (credentials) => {
     try {
@@ -27,28 +29,28 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(credentials),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Credenziali non valide");
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Credenziali non valide")
       }
 
-      const data = await response.json();
-      console.log(data);
+      const data = await response.json()
+      console.log(data)
       if (data) {
-        localStorage.setItem("token", data.accessToken);
+        localStorage.setItem("token", data.accessToken)
       }
 
-      console.log("Login effettuato con successo:", data);
-      navigate("/home");
-      return true;
+      console.log("Login effettuato con successo:", data)
+      navigate("/home")
+      return true
     } catch (error) {
-      console.error("Errore durante il login:", error.message);
-      alert(`Login fallito: ${error.message}`);
-      return false;
+      console.error("Errore durante il login:", error.message)
+      alert(`Login fallito: ${error.message}`)
+      return false
     }
-  };
+  }
 
   const handleRegister = async (formData) => {
     try {
@@ -58,24 +60,24 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Errore durante la registrazione");
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Errore durante la registrazione")
       }
 
-      const data = await response.json();
-      console.log("Registrazione completata:", data);
-      alert("Registrazione avvenuta con successo! Ora puoi accedere.");
-      navigate("/auth/login");
-      return true;
+      const data = await response.json()
+      console.log("Registrazione completata:", data)
+      alert("Registrazione avvenuta con successo! Ora puoi accedere.")
+      navigate("/auth/login")
+      return true
     } catch (error) {
-      console.error("Errore durante la registrazione:", error.message);
-      alert(`Registrazione fallita: ${error.message}`);
-      return false;
+      console.error("Errore durante la registrazione:", error.message)
+      alert(`Registrazione fallita: ${error.message}`)
+      return false
     }
-  };
+  }
 
   return (
     <div className="app-container">
@@ -102,6 +104,34 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/crea-fattura"
+          element={
+            <ProtectedRoute>
+              <Header />
+              <CreateFattura />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/lista-fatture"
+          element={
+            <ProtectedRoute>
+              <Header />
+              <FattureList />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/lista-clienti"
+          element={
+            <ProtectedRoute>
+              <Header />
+              <ClientiList />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route path="*" element={<NotFound />} />
         {/*ROTTA PER ADMIN*/}
         {/* <Route
           path="/home"
@@ -118,7 +148,7 @@ function App() {
         <Route path="*" element={<Navigate to="/auth/login" replace />} /> */}
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

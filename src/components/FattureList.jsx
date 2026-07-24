@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
-import { fetchWithAuth } from "../services/api";
+import { useState, useEffect } from "react"
+import { fetchWithAuth } from "../services/api"
+import { Container } from "react-bootstrap"
 
 export default function FattureList() {
-  const [fatture, setFatture] = useState([]);
+  const [fatture, setFatture] = useState([])
 
-  const [anno, setAnno] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const [minImporto, setMinImporto] = useState("");
-  const [maxImporto, setMaxImporto] = useState("");
+  const [anno, setAnno] = useState("")
+  const [start, setStart] = useState("")
+  const [end, setEnd] = useState("")
+  const [minImporto, setMinImporto] = useState("")
+  const [maxImporto, setMaxImporto] = useState("")
 
-  const [sortBy, setSortBy] = useState("id");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("id")
+  const [sortOrder, setSortOrder] = useState("asc")
 
   const loadFatture = async ({
     annoValue = anno,
@@ -26,37 +27,37 @@ export default function FattureList() {
       const params = new URLSearchParams({
         sortBy: sortByValue,
         order: sortOrderValue,
-      });
+      })
 
       if (annoValue) {
-        params.append("anno", annoValue);
+        params.append("anno", annoValue)
       }
 
       if (startValue) {
-        params.append("start", startValue);
+        params.append("start", startValue)
       }
 
       if (endValue) {
-        params.append("end", endValue);
+        params.append("end", endValue)
       }
 
       if (minImportoValue) {
-        params.append("minImporto", minImportoValue);
+        params.append("minImporto", minImportoValue)
       }
 
       if (maxImportoValue) {
-        params.append("maxImporto", maxImportoValue);
+        params.append("maxImporto", maxImportoValue)
       }
 
-      const res = await fetchWithAuth(`/fatture?${params.toString()}`);
+      const res = await fetchWithAuth(`/fatture?${params.toString()}`)
 
-      setFatture(res.content || []);
+      setFatture(res.content || [])
     } catch (err) {
-      console.error("Errore caricamento fatture:", err.message);
+      console.error("Errore caricamento fatture:", err.message)
 
-      setFatture([]);
+      setFatture([])
     }
-  };
+  }
 
   useEffect(() => {
     const loadInitialFatture = async () => {
@@ -64,41 +65,41 @@ export default function FattureList() {
         const params = new URLSearchParams({
           sortBy: "id",
           order: "asc",
-        });
+        })
 
-        const res = await fetchWithAuth(`/fatture?${params.toString()}`);
+        const res = await fetchWithAuth(`/fatture?${params.toString()}`)
 
-        setFatture(res.content || []);
+        setFatture(res.content || [])
       } catch (err) {
-        console.error("Errore caricamento fatture:", err.message);
+        console.error("Errore caricamento fatture:", err.message)
 
-        setFatture([]);
+        setFatture([])
       }
-    };
+    }
 
-    loadInitialFatture();
-  }, []);
+    loadInitialFatture()
+  }, [])
 
   const handleFilterClick = () => {
-    loadFatture();
-  };
+    loadFatture()
+  }
 
   const handleSortChange = async (newSortBy, newSortOrder) => {
-    setSortBy(newSortBy);
-    setSortOrder(newSortOrder);
+    setSortBy(newSortBy)
+    setSortOrder(newSortOrder)
 
     await loadFatture({
       sortByValue: newSortBy,
       sortOrderValue: newSortOrder,
-    });
-  };
+    })
+  }
 
   const handleResetFilters = () => {
-    setAnno("");
-    setStart("");
-    setEnd("");
-    setMinImporto("");
-    setMaxImporto("");
+    setAnno("")
+    setStart("")
+    setEnd("")
+    setMinImporto("")
+    setMaxImporto("")
 
     loadFatture({
       annoValue: "",
@@ -106,127 +107,128 @@ export default function FattureList() {
       endValue: "",
       minImportoValue: "",
       maxImportoValue: "",
-    });
-  };
+    })
+  }
 
   return (
-    <div className="card p-3 mb-4 shadow-sm">
-      <h3 className="mb-3">Gestione Fatture</h3>
+    <Container className="mt-5">
+      <div className="card p-3 mb-4 shadow-sm">
+        <h3 className="mb-3">Gestione Fatture</h3>
 
-      <div className="row g-3 mb-4">
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Anno</label>
+        <div className="row g-3 mb-4">
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Anno</label>
 
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Es. 2024"
-            value={anno}
-            onChange={(e) => setAnno(e.target.value)}
-          />
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Es. 2024"
+              value={anno}
+              onChange={(e) => setAnno(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Data Inizio</label>
+
+            <input
+              type="date"
+              className="form-control"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Data Fine</label>
+
+            <input
+              type="date"
+              className="form-control"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Importo Minimo</label>
+
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Es. 100"
+              min="0"
+              step="0.01"
+              value={minImporto}
+              onChange={(e) => setMinImporto(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Importo Massimo</label>
+
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Es. 5000"
+              min="0"
+              step="0.01"
+              value={maxImporto}
+              onChange={(e) => setMaxImporto(e.target.value)}
+            />
+          </div>
         </div>
 
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Data Inizio</label>
+        <div className="row g-3 mb-4 align-items-end">
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Ordina Per</label>
 
-          <input
-            type="date"
-            className="form-control"
-            value={start}
-            onChange={(e) => setStart(e.target.value)}
-          />
-        </div>
+            <select
+              className="form-select"
+              value={sortBy}
+              onChange={(e) => handleSortChange(e.target.value, sortOrder)}
+            >
+              <option value="id">ID Fattura</option>
 
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Data Fine</label>
+              <option value="data">Data</option>
 
-          <input
-            type="date"
-            className="form-control"
-            value={end}
-            onChange={(e) => setEnd(e.target.value)}
-          />
-        </div>
+              <option value="importo">Importo</option>
+            </select>
+          </div>
 
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Importo Minimo</label>
+          <div className="col-md-4">
+            <label className="form-label fw-bold">Direzione</label>
 
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Es. 100"
-            min="0"
-            step="0.01"
-            value={minImporto}
-            onChange={(e) => setMinImporto(e.target.value)}
-          />
-        </div>
+            <select
+              className="form-select"
+              value={sortOrder}
+              onChange={(e) => handleSortChange(sortBy, e.target.value)}
+            >
+              <option value="asc">Crescente (ASC)</option>
 
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Importo Massimo</label>
+              <option value="desc">Decrescente (DESC)</option>
+            </select>
+          </div>
 
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Es. 5000"
-            min="0"
-            step="0.01"
-            value={maxImporto}
-            onChange={(e) => setMaxImporto(e.target.value)}
-          />
+          <div className="col-md-4 d-flex gap-2">
+            <button
+              type="button"
+              className="btn btn-primary flex-grow-1"
+              onClick={handleFilterClick}
+            >
+              Applica Filtri
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary flex-grow-1"
+              onClick={handleResetFilters}
+            >
+              Reset Filtri
+            </button>
+          </div>
         </div>
       </div>
-
-      <div className="row g-3 mb-4 align-items-end">
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Ordina Per</label>
-
-          <select
-            className="form-select"
-            value={sortBy}
-            onChange={(e) => handleSortChange(e.target.value, sortOrder)}
-          >
-            <option value="id">ID Fattura</option>
-
-            <option value="data">Data</option>
-
-            <option value="importo">Importo</option>
-          </select>
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label fw-bold">Direzione</label>
-
-          <select
-            className="form-select"
-            value={sortOrder}
-            onChange={(e) => handleSortChange(sortBy, e.target.value)}
-          >
-            <option value="asc">Crescente (ASC)</option>
-
-            <option value="desc">Decrescente (DESC)</option>
-          </select>
-        </div>
-
-        <div className="col-md-4 d-flex gap-2">
-          <button
-            type="button"
-            className="btn btn-primary flex-grow-1"
-            onClick={handleFilterClick}
-          >
-            Applica Filtri
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-secondary flex-grow-1"
-            onClick={handleResetFilters}
-          >
-            Reset Filtri
-          </button>
-        </div>
-      </div>
-
       <div className="table-responsive">
         <table className="table table-striped table-hover align-middle">
           <thead className="table-dark">
@@ -267,6 +269,6 @@ export default function FattureList() {
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </Container>
+  )
 }
