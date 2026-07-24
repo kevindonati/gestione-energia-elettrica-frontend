@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from "../services/api";
 
-function CreateCliente() {
+function ClientiCreate() {
   const [indirizzi, setIndirizzi] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -400,4 +400,4 @@ function CreateCliente() {
   );
 }
 
-export default CreateCliente;
+export default ClientiCreate;
