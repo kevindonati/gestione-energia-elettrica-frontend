@@ -180,9 +180,7 @@ export default function ClientiList() {
                   <td>€ {c.fatturatoAnnuale}</td>
                   <td>{c.dataInserimento}</td>
                   <td>{c.dataUltimoContatto}</td>
-                  <td>
-                    {c.indirizzoSedeLegale?.comune?.provincia?.sigla || "N/D"}
-                  </td>
+                  <td>{c.sedeLegale?.comune?.provincia?.nome || "N/D"}</td>
                 </tr>
               ))
             ) : (
@@ -192,6 +190,7 @@ export default function ClientiList() {
                 </td>
               </tr>
             )}
+            {console.log(clienti)}
           </tbody>
         </table>
       </div>

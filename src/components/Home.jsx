@@ -40,7 +40,7 @@ const Home = () => {
         const data = await response.json()
         setUserData(data)
 
-        console.log(data)
+        console.log("prova", data)
 
         setTimeout(() => {
           setUserData({
@@ -91,7 +91,7 @@ const Home = () => {
 
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="text-black fw-bold">Dashboard Utente</h2>
-          <Button variant="outline-light" size="sm" onClick={handleLogout}>
+          <Button variant="outline-danger" size="sm" onClick={handleLogout}>
             Logout
           </Button>
         </div>

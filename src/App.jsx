@@ -9,6 +9,10 @@ import FattureList from "./components/FattureList"
 import ClientiList from "./components/ClientiList"
 import CreateFattura from "./components/CreateFattura"
 import NotFound from "./components/NotFound"
+import { useState } from "react"
+import UpdateFattura from "./components/UpdateFattura"
+import CreateStatoFattura from "./components/CreateStatoFattura"
+import UpdateStatoFattura from "./components/UpdateStatoFattura"
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token")
@@ -20,6 +24,7 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   const navigate = useNavigate()
+  const [userData, setUserData] = useState(null)
 
   const handleLogin = async (credentials) => {
     try {
@@ -37,10 +42,13 @@ function App() {
       }
 
       const data = await response.json()
-      console.log(data)
+      console.log("qua deve esserci ruolo", data)
       if (data) {
         localStorage.setItem("token", data.accessToken)
       }
+      setUserData({
+        ruoli: data.ruolo,
+      })
 
       console.log("Login effettuato con successo:", data)
       navigate("/home")
@@ -50,6 +58,21 @@ function App() {
       alert(`Login fallito: ${error.message}`)
       return false
     }
+  }
+  console.log("userdata", userData)
+
+  const isAdmin = () => {
+    console.log("Controllo se utente è admin")
+    if (!userData) {
+      console.log("Userdata non trovato")
+      return false
+    }
+    if (userData.ruoli[0].nomeRuolo.includes("ADMIN")) {
+      console.log("Utente è admin")
+    } else {
+      console.log("Utente non è admin")
+    }
+    return userData.ruoli[0].nomeRuolo.includes("ADMIN")
   }
 
   const handleRegister = async (formData) => {
@@ -104,33 +127,49 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/crea-fattura"
-          element={
-            <ProtectedRoute>
-              <Header />
-              <CreateFattura />
-            </ProtectedRoute>
-          }
-        ></Route>
-        <Route
-          path="/lista-fatture"
-          element={
-            <ProtectedRoute>
-              <Header />
-              <FattureList />
-            </ProtectedRoute>
-          }
-        ></Route>
-        <Route
-          path="/lista-clienti"
-          element={
-            <ProtectedRoute>
-              <Header />
-              <ClientiList />
-            </ProtectedRoute>
-          }
-        ></Route>
+        {isAdmin() && (
+          <>
+            <Route
+              path="/crea-fattura"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <CreateFattura />
+                  <UpdateFattura />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/lista-fatture"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <FattureList />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/lista-clienti"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <ClientiList />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/modifica-stato-fattura"
+              element={
+                <ProtectedRoute>
+                  <Header />
+                  <UpdateStatoFattura></UpdateStatoFattura>
+                  <CreateStatoFattura></CreateStatoFattura>
+                </ProtectedRoute>
+              }
+            ></Route>
+          </>
+        )}
+
         <Route path="*" element={<NotFound />} />
         {/*ROTTA PER ADMIN*/}
         {/* <Route
