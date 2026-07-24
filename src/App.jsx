@@ -10,6 +10,7 @@ import ClientiList from "./components/ClientiList"
 import CreateFattura from "./components/CreateFattura"
 import NotFound from "./components/NotFound"
 import { useState } from "react"
+import UpdateFattura from "./components/UpdateFattura"
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token")
@@ -132,6 +133,7 @@ function App() {
                 <ProtectedRoute>
                   <Header />
                   <CreateFattura />
+                  <UpdateFattura />
                 </ProtectedRoute>
               }
             ></Route>
